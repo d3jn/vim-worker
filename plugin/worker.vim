@@ -1,7 +1,6 @@
 " Vim Worker
 " Author:     Serhii Yaniuk <serhiiyaniuk@gmail.com>
 " Repository: github.com/d3jn/vim-worker
-" Version:    0.1
 " License:    MIT License
 
 if exists('g:worker_loaded')
