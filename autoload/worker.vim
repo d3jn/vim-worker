@@ -21,7 +21,7 @@ function! worker#ShowTasks()
         call setline(line, " - [ " . task.shortcut . " ] " . task.command)
         let line += 1
 
-        let escaped_command = substitute(task.command, "'", "''", "")
+        let escaped_command = substitute(task.command, "'", "''", "g")
         execute "nnoremap <buffer> " . task.shortcut . " :echo system('" . escaped_command . "')<CR>"
     endfor
 
