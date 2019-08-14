@@ -21,7 +21,8 @@ function! worker#ShowTasks()
         call setline(line, " - [ " . task.shortcut . " ] " . task.command)
         let line += 1
 
-        execute "nnoremap <buffer> " . task.shortcut . " :!" . task.command . "<CR>"
+        let escaped_command = substitute(task.command, "'", "''", "")
+        execute "nnoremap <buffer> " . task.shortcut . " :echo system('" . escaped_command . "')<CR>"
     endfor
 
     execute "resize " . (count + 1)
