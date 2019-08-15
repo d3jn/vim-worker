@@ -28,7 +28,12 @@ In order to change certain option add `let g:(option name) = '(new value)'` to y
 ### `worker_tasks_file`
 > (default: `'.vim-worker'`)
 
-This option specifies were to read tasks from. You can also specify absolute path in case you want to have one tasks file shared all the time regardless of your current working directory.
+This option specifies were to read tasks from. It is recommended to set relative path for this option - for global tasks file use `worker_global_tasks_file` option.
+
+### `worker_global_tasks_file`
+> (default: none)
+
+This file will be used in case file configured in `worker_tasks_file` is not found.
 
 ### `worker_shortcut_keys`
 > (default: `['a', 's', 'd', 'f', 'j', 'k', 'l', ';', 'w', 'e', 'r', 'u', 'i', 'o', 'p', 'x']`)
