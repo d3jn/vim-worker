@@ -14,18 +14,18 @@ function! worker#ShowTasks()
     setlocal nonumber
     setlocal norelativenumber
 
-    call setline(1, " List of tasks (" . count . ")")
+    call setline(1, ' List of tasks (' . count . ')')
 
     let line = 2
     for task in tasks
-        call setline(line, " - [ " . task.shortcut . " ] " . task.command)
+        call setline(line, ' - [ ' . task.shortcut . ' ] ' . task.command)
         let line += 1
 
-        let escaped_command = substitute(task.command, "'", "''", "g")
-        execute "nnoremap <buffer> " . task.shortcut . " :echo system('" . escaped_command . "')<CR>"
+        let escaped_command = substitute(task.command, "'", "''", 'g')
+        execute 'nnoremap <buffer> ' . task.shortcut . " :echo system('" . escaped_command . "')<CR>"
     endfor
 
-    execute "resize " . (count + 1)
+    execute 'resize ' . (count + 1)
     setlocal nomodifiable
 
     nnoremap <silent> <buffer> q :bdelete!<CR>
