@@ -4,7 +4,20 @@
 " License:    MIT License
 
 function! worker#ShowTasks()
-    let tasks = s:GetTasks(g:worker_tasks_file, g:worker_shortcut_keys)
+    let tasks_file = ''
+    if exists('g:worker_global_tasks_file') && filereadable(g:worker_global_tasks_file)
+        let tasks_file = g:worker_global_tasks_file
+    endif
+    if filereadable(g:worker_tasks_file)
+        let tasks_file = g:worker_tasks_file
+    endif
+
+    if tasks_file == ''
+        echo 'Vim-Worker: Tasks file not found!'
+        return
+    endif
+
+    let tasks = s:GetTasks(tasks_file, g:worker_shortcut_keys)
     let count = len(tasks)
 
     new
