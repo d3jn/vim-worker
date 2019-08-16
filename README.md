@@ -21,10 +21,18 @@ vendor/bin/php-cs-fixer fix ./app
 vendor/bin/phpunit tests --stop-on-failure --exclude-group deprecated
 ```
 
-Now in Vim press `<Leader>z` to open list with those tasks. Each task will have unique key combination automatically assigned to it - pressing such combination will execute corresponding command. Pressing `q` will close the list.
+Now in Vim press `<Leader>z` (or your own mapping if configured) to open list with those tasks. Each task will have unique key combination automatically assigned to it - pressing such combination will execute corresponding command. Pressing `q` will close the list.
 
 ## Configuration
 In order to change certain option add `let g:(option name) = '(new value)'` to your vimrc file. For example, `let g:worker_tasks_file='.my-tasks'`.
+
+### `worker_map_keys`
+> (default: `1`)
+
+If enabled then plugin will map `<Leader>z` to show buffer with tasks list. In case you want to provide your own mapping set this option to `0` and map it yourself:
+```
+    nnoremap <Leader>w :call worker#ShowTasks()<CR>
+```
 
 ### `worker_tasks_file`
 > (default: `'.vim-worker'`)
