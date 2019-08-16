@@ -27,7 +27,13 @@ function! worker#ShowTasks()
     setlocal nonumber
     setlocal norelativenumber
 
-    call setline(1, ' List of tasks (' . count . ')')
+    syntax keyword WorkerHeading Tasks
+    syntax region WorkerShortcut start=/\[/ skip=/\v\\./ end=/\]/
+
+    highlight link WorkerHeading Keyword
+    highlight link WorkerShortcut String
+
+    call setline(1, ' Tasks (' . count . ')')
 
     let line = 2
     for task in tasks
