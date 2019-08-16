@@ -27,10 +27,13 @@ function! worker#ShowTasks()
     setlocal nonumber
     setlocal norelativenumber
 
-    syntax keyword WorkerHeading Tasks
-    syntax region WorkerShortcut start=/\[/ skip=/\v\\./ end=/\]/
+    syntax on
+    syntax match WorkerHeading /\v^ Tasks / 
+    syntax match WorkerPoint /\v^ -/
+    syntax region WorkerShortcut start=/\[ / skip=/\v\\./ end=/ \]/
 
     highlight link WorkerHeading Keyword
+    highlight link WorkerPoint Operator
     highlight link WorkerShortcut String
 
     call setline(1, ' Tasks (' . count . ')')
