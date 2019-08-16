@@ -3,22 +3,25 @@
 " Repository: github.com/d3jn/vim-worker
 " License:    MIT License
 
-function! worker#ShowTasks()
-    let tasks_file = ''
+function! worker#ShowTasks() abort
+    let global_tasks_count = 0
+    let tasks_count = 0
+
     if exists('g:worker_global_tasks_file') && filereadable(g:worker_global_tasks_file)
-        let tasks_file = g:worker_global_tasks_file
+        let global_tasks_file = g:worker_global_tasks_file
+        let global_tasks = s:GetTasks(global_tasks_file, g:worker_shortcut_keys)
+        let global_tasks_count = len(global_tasks)
     endif
     if filereadable(g:worker_tasks_file)
         let tasks_file = g:worker_tasks_file
+        let tasks = s:GetTasks(tasks_file, g:worker_shortcut_keys)
+        let tasks_count = len(tasks)
     endif
 
-    if tasks_file == ''
-        echo 'Vim-Worker: Tasks file not found!'
+    if (global_tasks_count + tasks_count) == 0 
+        echo 'Vim-Worker: Tasks not found!'
         return
     endif
-
-    let tasks = s:GetTasks(tasks_file, g:worker_shortcut_keys)
-    let count = len(tasks)
 
     new
     setlocal noswapfile
@@ -29,6 +32,7 @@ function! worker#ShowTasks()
 
     syntax on
     syntax match WorkerHeading /\v^ Tasks / 
+    syntax match WorkerHeading /\v^ Global /
     syntax match WorkerPoint /\v^ -/
     syntax region WorkerShortcut start=/\[ / skip=/\v\\./ end=/ \]/
 
@@ -36,21 +40,47 @@ function! worker#ShowTasks()
     highlight link WorkerPoint Operator
     highlight link WorkerShortcut String
 
-    call setline(1, ' Tasks (' . count . ')')
+    let buffer_size = 0
 
-    let line = 2
-    for task in tasks
-        call setline(line, ' - [ ' . task.shortcut . ' ] ' . task.command)
-        let line += 1
+    if tasks_count > 0
+        call s:RenderTasks(1, 'Tasks', tasks, '')
+        let buffer_size = tasks_count + 1
+    endif
 
-        let escaped_command = substitute(task.command, "'", "''", 'g')
-        execute 'nnoremap <buffer> ' . task.shortcut . " :echo system('" . escaped_command . "')<CR>"
-    endfor
+    if global_tasks_count > 0
+        let global_tasks_starting_line = 1
+        let buffer_size = global_tasks_count + 1
 
-    execute 'resize ' . (count + 1)
+        if tasks_count > 0
+            call setline(tasks_count + 2, '')
+            let global_tasks_starting_line = tasks_count + 3
+
+            let buffer_size = tasks_count + global_tasks_count + 3
+        endif
+
+        call s:RenderTasks(global_tasks_starting_line, 'Global', global_tasks, 'g')
+    endif
+
+    execute 'resize ' . (buffer_size + 1)
     setlocal nomodifiable
 
     nnoremap <silent> <buffer> q :bdelete!<CR>
+endfunction
+
+function! s:RenderTasks(starting_from_line, heading, tasks, shortcut_prefix)
+    let line = a:starting_from_line
+    call setline(line, ' ' . a:heading . ' (' . len(a:tasks) . ')')
+
+    let line += 1
+    for task in a:tasks
+        let shortcut = a:shortcut_prefix . task.shortcut
+
+        call setline(line, ' - [ ' . shortcut . ' ] ' . task.command)
+        let line += 1
+
+        let escaped_command = substitute(task.command, "'", "''", 'g')
+        execute 'nnoremap <buffer> ' . shortcut . " :echo system('" . escaped_command . "')<CR>"
+    endfor
 endfunction
 
 function! s:GetTasks(file, shortcut_keys)
