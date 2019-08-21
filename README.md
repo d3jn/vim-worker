@@ -26,7 +26,7 @@ Now in Vim press `<Leader>z` (or your own mapping if configured) to open list wi
 ## Configuration
 In order to change certain option add `let g:(option name) = '(new value)'` to your vimrc file. For example, `let g:worker_tasks_file='.my-tasks'`.
 
-### `worker_map_keys`
+#### `worker_map_keys`
 > (default: `1`)
 
 If enabled then plugin will map `<Leader>z` to show buffer with tasks list. In case you want to provide your own mapping set this option to `0` and map it yourself:
@@ -34,29 +34,29 @@ If enabled then plugin will map `<Leader>z` to show buffer with tasks list. In c
     nnoremap <Leader>w :call worker#ShowTasks()<CR>
 ```
 
-### `worker_tasks_file`
+#### `worker_tasks_file`
 > (default: `'.vim-worker'`)
 
 This option specifies where to read tasks from. It is recommended to set relative path for this option since there is a separate option for global tasks (see below).
 
-### `worker_global_tasks_file`
+#### `worker_global_tasks_file`
 > (default: none)
 
 If defined then tasks from this file will be shown in seperate category regardless of whether local tasks file exists or not. All key combinations for it's commands are generated in the same order, but will have preceding `g` key to avoid conflicts with local ones.
 
-### `worker_autoclose_tasks_list`
+#### `worker_autoclose_tasks_list`
 > (default: 1)
 
 If enabled this option makes plugin close tasks list buffer automatically once you run a task from it.
 
-### `worker_task_running_strategy`
+#### `worker_task_running_strategy`
 > (default: `'system'`)
 
 Choose how your tasks will be run from your Vim environment. Supported strategies for now are:
 * `system` - plugin will execute your task's command via `system()` function call and echo the result in Vim;
 * `termopen` - plugin will create new buffer, open terminal in it and execute task's command using `termopen()` function. Pressing `q` will close the buffer.
 
-### `worker_shortcut_keys`
+#### `worker_shortcut_keys`
 > (default: `['a', 's', 'd', 'f', 'j', 'k', 'l', ';', 'w', 'e', 'r', 'u', 'i', 'o', 'p', 'x']`)
 
 List of keys that will be used in key combinations generated for your tasks.
