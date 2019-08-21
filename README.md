@@ -26,6 +26,8 @@ Now in Vim press `<Leader>z` (or your own mapping if configured) to open list wi
 ## Configuration
 In order to change certain option add `let g:(option name) = '(new value)'` to your vimrc file. For example, `let g:worker_tasks_file='.my-tasks'`.
 
+### Available options
+
 #### `worker_map_keys`
 > (default: `1`)
 
