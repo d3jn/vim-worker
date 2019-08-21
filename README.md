@@ -47,7 +47,7 @@ If defined then tasks from this file will be shown in seperate category regardle
 ### `worker_autoclose_tasks_list`
 > (default: 1)
 
-If enabled this option makes plugin close tasks list buffer automatically once you chose task to run.
+If enabled this option makes plugin close tasks list buffer automatically once you run a task from it.
 
 ### `worker_task_running_strategy`
 > (default: `'system'`)
