@@ -8,6 +8,18 @@ if exists('g:worker_loaded')
 endif
 let g:worker_loaded = 1
 
+if !exists('g:worker_local_tasks')
+    let g:worker_local_tasks = []
+endif
+
+if !exists('g:worker_global_tasks')
+    let g:worker_global_tasks = []
+endif
+
+if !exists('g:worker_task_running_strategy')
+    let g:worker_task_running_strategy = 'system'
+endif
+
 if !exists('g:worker_tasks_file')
     let g:worker_tasks_file = '.vim-worker'
 endif

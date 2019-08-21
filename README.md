@@ -44,6 +44,13 @@ This option specifies where to read tasks from. It is recommended to set relativ
 
 If defined then tasks from this file will be shown in seperate category regardless of whether local tasks file exists or not. All key combinations for it's commands are generated in the same order, but will have preceding `g` key to avoid conflicts with local ones.
 
+### `worker_task_running_strategy`
+> (default: `'system'`)
+
+Choose how your tasks will be run from your Vim environment. Supported strategies for now are:
+* `system` - plugin will execute your task's command via `system()` function call and echo the result in Vim;
+* `termopen` - plugin will create new buffer, open terminal in it and execute task's command using `termopen()` function. Pressing `q` will close the buffer.
+
 ### `worker_shortcut_keys`
 > (default: `['a', 's', 'd', 'f', 'j', 'k', 'l', ';', 'w', 'e', 'r', 'u', 'i', 'o', 'p', 'x']`)
 

@@ -9,13 +9,13 @@ function! worker#ShowTasks() abort
 
     if exists('g:worker_global_tasks_file') && filereadable(g:worker_global_tasks_file)
         let global_tasks_file = g:worker_global_tasks_file
-        let global_tasks = s:GetTasks(global_tasks_file, g:worker_shortcut_keys)
-        let global_tasks_count = len(global_tasks)
+        let g:worker_global_tasks = s:GetTasks(global_tasks_file, g:worker_shortcut_keys)
+        let global_tasks_count = len(g:worker_global_tasks)
     endif
     if filereadable(g:worker_tasks_file)
         let tasks_file = g:worker_tasks_file
-        let tasks = s:GetTasks(tasks_file, g:worker_shortcut_keys)
-        let tasks_count = len(tasks)
+        let g:worker_local_tasks = s:GetTasks(tasks_file, g:worker_shortcut_keys)
+        let tasks_count = len(g:worker_local_tasks)
     endif
 
     if (global_tasks_count + tasks_count) == 0 
@@ -43,7 +43,7 @@ function! worker#ShowTasks() abort
     let buffer_size = 0
 
     if tasks_count > 0
-        call s:RenderTasks(1, 'Tasks', tasks, '')
+        call s:RenderTasks(1, 'Tasks', g:worker_local_tasks, 0)
         let buffer_size = tasks_count + 1
     endif
 
@@ -58,7 +58,7 @@ function! worker#ShowTasks() abort
             let buffer_size = tasks_count + global_tasks_count + 3
         endif
 
-        call s:RenderTasks(global_tasks_starting_line, 'Global', global_tasks, 'g')
+        call s:RenderTasks(global_tasks_starting_line, 'Global', g:worker_global_tasks, 1)
     endif
 
     execute 'resize ' . (buffer_size + 1)
@@ -67,20 +67,62 @@ function! worker#ShowTasks() abort
     nnoremap <silent> <buffer> q :bdelete!<CR>
 endfunction
 
-function! s:RenderTasks(starting_from_line, heading, tasks, shortcut_prefix)
+function! worker#RunGlobalTask(task_id)
+    call s:RunTask(g:worker_global_tasks, a:task_id, g:worker_task_running_strategy)
+endfunction
+
+function! worker#RunLocalTask(task_id)
+    call s:RunTask(g:worker_local_tasks, a:task_id, g:worker_task_running_strategy)
+endfunction
+
+function! s:RenderTasks(starting_from_line, heading, tasks, should_be_global)
+    let shortcut_prefix = ''
+    let task_running_function = 'worker#RunLocalTask'
+    if a:should_be_global
+        let shortcut_prefix = 'g'
+        let task_running_function = 'worker#RunGlobalTask'
+    endif
+
     let line = a:starting_from_line
     call setline(line, ' ' . a:heading . ' (' . len(a:tasks) . ')')
 
     let line += 1
+    let index = 0
     for task in a:tasks
-        let shortcut = a:shortcut_prefix . task.shortcut
+        let shortcut = shortcut_prefix . task.shortcut
 
         call setline(line, ' - [ ' . shortcut . ' ] ' . task.command)
         let line += 1
 
-        let escaped_command = substitute(task.command, "'", "''", 'g')
-        execute 'nnoremap <buffer> ' . shortcut . " :echo system('" . escaped_command . "')<CR>"
+        execute 'nnoremap <buffer> ' . shortcut . ' :call ' . task_running_function . '(' . index . ')<CR>'
+        let index += 1
     endfor
+endfunction
+
+function! s:RunTask(tasks, task_id, strategy)
+    echo a:tasks
+    let task = get(a:tasks, a:task_id, {})
+    if task == {}
+        echoerr "Vim-Worker: Mapped task #" . a:task_id . " no longer exists in the list of tasks!"
+        return
+    endif
+
+    if a:strategy == 'system'
+        echo system(task.command)
+    elseif a:strategy == 'termopen'
+        new
+        setlocal noswapfile
+        setlocal buftype=nofile
+        setlocal bufhidden=wipe
+        setlocal nonumber
+        setlocal norelativenumber
+        nnoremap <silent> <buffer> q :bdelete!<CR>
+
+        call termopen(task.command)
+    else
+        echoerr "Vim-Worker: Unknown strategy '" . a:strategy . "'! Can't run the task!"
+        return
+    endif
 endfunction
 
 function! s:GetTasks(file, shortcut_keys)
