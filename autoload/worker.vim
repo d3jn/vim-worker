@@ -107,6 +107,10 @@ function! s:RunTask(tasks, task_id, strategy)
         return
     endif
 
+    if g:worker_autoclose_tasks_list == 1
+        bdelete!
+    endif
+
     if a:strategy == 'system'
         echo system(task.command)
     elseif a:strategy == 'termopen'

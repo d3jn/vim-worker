@@ -44,6 +44,11 @@ This option specifies where to read tasks from. It is recommended to set relativ
 
 If defined then tasks from this file will be shown in seperate category regardless of whether local tasks file exists or not. All key combinations for it's commands are generated in the same order, but will have preceding `g` key to avoid conflicts with local ones.
 
+### `worker_autoclose_tasks_list`
+> (default: 1)
+
+If enabled this option makes plugin close tasks list buffer automatically once you chose task to run.
+
 ### `worker_task_running_strategy`
 > (default: `'system'`)
 
