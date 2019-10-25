@@ -33,7 +33,7 @@ In order to change certain option add `let g:(option name) = '(new value)'` to y
 
 If enabled then plugin will map `<Leader>z` to show buffer with tasks list. In case you want to provide your own mapping set this option to `0` and map it yourself:
 ```
-    nnoremap <Leader>w :call worker#ShowTasks()<CR>
+nnoremap <Leader>w :call worker#ShowTasks()<CR>
 ```
 
 #### `worker_tasks_file`
