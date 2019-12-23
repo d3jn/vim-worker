@@ -100,7 +100,6 @@ function! s:RenderTasks(starting_from_line, heading, tasks, should_be_global)
 endfunction
 
 function! s:RunTask(tasks, task_id, strategy)
-    echo a:tasks
     let task = get(a:tasks, a:task_id, {})
     if task == {}
         echoerr "Vim-Worker: Mapped task #" . a:task_id . " no longer exists in the list of tasks!"
