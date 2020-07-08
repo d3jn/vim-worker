@@ -13,7 +13,7 @@ call plug#end()
 ```
 
 ## Usage
-Create `.vim-worker` file in the directory you are working in. Each line of this file will represent one separate task (shell command). For example, this is how you can define two tasks in this file:
+Create `.vim-worker` file in the directory you are working in. Each line of this file will represent one separate task (shell command). For example, this is how you can define three tasks in this file:
 
 ```
 echo "It works"
