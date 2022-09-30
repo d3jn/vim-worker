@@ -20,6 +20,10 @@ if !exists('g:worker_task_running_strategy')
     let g:worker_task_running_strategy = 'system'
 endif
 
+if !exists('g:worker_termopen_close_on_success')
+    let g:worker_termopen_close_on_success = 1
+endif
+
 if !exists('g:worker_tasks_file')
     let g:worker_tasks_file = '.vim-worker'
 endif
