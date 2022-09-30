@@ -58,6 +58,11 @@ Choose how your tasks will be run from your Vim environment. Supported strategie
 * `system` - plugin will execute your task's command via `system()` function call and echo the result in Vim;
 * `termopen` - plugin will create new buffer, open terminal in it and execute task's command using `termopen()` function. Pressing `q` will close the buffer.
 
+#### `worker_termopen_close_on_success`
+> (default: 1)
+
+This option only works for `termopen` task running strategy. If enabled the plugin will automatically close terminal buffer once running task finishes with 0 exit code (success).
+
 #### `worker_shortcut_keys`
 > (default: `['a', 's', 'd', 'f', 'j', 'k', 'l', ';', 'w', 'e', 'r', 'u', 'i', 'o', 'p', 'x']`)
 
