@@ -99,6 +99,18 @@ function! s:RenderTasks(starting_from_line, heading, tasks, should_be_global)
     endfor
 endfunction
 
+function! s:TermopenOnStdOut(job_id, data, event)
+    execute "normal! G"
+endfunction
+
+function! s:TermopenOnExit(job_id, data, event)
+    if g:worker_termopen_close_on_success == 1
+        if a:data == 0
+            bdelete!
+        endif
+    endif
+endfunction
+
 function! s:RunTask(tasks, task_id, strategy)
     let task = get(a:tasks, a:task_id, {})
     if task == {}
@@ -121,7 +133,7 @@ function! s:RunTask(tasks, task_id, strategy)
         setlocal norelativenumber
         nnoremap <silent> <buffer> q :bdelete!<CR>
 
-        call termopen(task.command)
+        call termopen(task.command, {'on_stdout': function('s:TermopenOnStdOut'), 'on_exit': function('s:TermopenOnExit')})
     else
         echoerr "Vim-Worker: Unknown strategy '" . a:strategy . "'! Can't run the task!"
         return
